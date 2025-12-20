@@ -23,8 +23,6 @@ app.use(
 
 /* ---------- MIDDLEWARE ---------- */
 app.use(express.json());
-
-/* ⚠️ uploads folder is TEMPORARY on Vercel */
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 /* ---------- TEST ROUTE ---------- */
@@ -38,5 +36,13 @@ app.use("/api/clients", require("./routes/clientRoutes"));
 app.use("/api/contact", require("./routes/contactRoutes"));
 app.use("/api/subscribers", require("./routes/subscriberRoutes"));
 
-/* ---------- EXPORT APP (NO LISTEN) ---------- */
+/* ---------- START SERVER LOCALLY ONLY ---------- */
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`✅ Server running locally on port ${PORT}`);
+  });
+}
+
+/* ---------- EXPORT FOR VERCEL ---------- */
 module.exports = app;
